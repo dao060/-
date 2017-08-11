@@ -1,0 +1,85 @@
+url模块提供了一些实用函数，用于 URL 处理与解析
+┌───────────────────────────────────────────────────────
+│                                            href                                             │
+├──────────┬──┬─────────────────────┬──────────────────
+│ protocol │  │        auth     │        host         │           path          │ hash(锚点)  │
+│          │  │                 ├──────────────┬──────┼──────────┬─
+│          │  │                 │   hostname  │ port │ pathname│     search   │       │
+│          │  │                 │             │      │         ├┬─────────────
+│          │  │                 │             │      │         ││    query   │       │
+"  https:   //    user   :   pass   @ sub.host.com : 8080   /p/a/t/h  ?  query=string   #hash "
+│          │  │          │     │   hostname  │ port │          │              │       │
+│          │  │          │     ├──────────────┴ ─┤              │
+│ protocol │  │ username │ password │        host     │         │              │       │
+├──────────┴──┼──────────┴─────────┼─────────────────
+│   origin    │                     │       origin      │ pathname│     search   │ hash  │
+├─────────────┴────────────────────┴────────────────
+│                                            href                                             │
+└─────────────────────────────────────────────────────
+
+
+WHATWG URL api
+    1、  new URL() // 参数可以为(input, base); string完整的url字符串, Object {toString: () => 'http://www.baidu.com'}
+        会自动将汉字转化成unicode码
+        new URL('http://你好你好')
+    2、 url.toString()/url.toJSON() // 将对象转化返回序列化url
+
+WHATWG URL 属性
+    1、 url.hash         // 获取锚点  http://www.baidu.com#name 会获得#name得值
+    2、 url.host         // 获取及设置主机host部分包含端口号
+    3、 url.hostname     // 获取host不包含端口号
+    4、 url.href         // 获取及设置序列化url （字符串形式url） 等同于url.toString() 若设置为无效则会抛出错误
+    5、 url.origin       // 获取位编码的原始输入的主机名及端口号
+    6、 url.password     // 获取或设置登录密码
+    7、 url.pathname     // 获取或设置路径
+    8、 url.port         // 获取或设置端口号
+    9、 url.protocol     // 获取或设置url协议http/https/...
+    10、 url.search      // 获取或设置查询字符串内容包含问好
+    11  url.searchParams // 获取查询字符串的内容 不包含问好
+    12、url.username     // 获取或设置登录的用户名
+
+class 对象接口 URLSearchParams 用来提供对 url query部分读写权限
+    1、创建/构造方式
+        1、 const {URL, URLSearchParams} = require('url');
+        2、 const URLSearchParams = new URLSearchParams(URL.searchParams);
+    2、 new URLSearchParams() 参数String /Object / iterable 迭代数组或对象（键值）
+    3、 api
+        1、append(name, value) // 在查询字符串中插入新键值
+        2、delete(name)        // 删除所有名为name的键值对
+        3、entries()           // 转化成{[key, value],[key, value],...}形式
+        4、forEach((name, value, searchParams) => {})  // 遍历
+        5、get(name)           // 获取第一个键的值 返回 String
+        6、getAll(name)        // 获取所有 返回 Array
+        7、has(name)           // 判断是否有 返回 boolean
+        8、keys()              // 获取key组成的类数组对象
+        9、values()             // 获取值对象
+        10、set(name, value)    // 设置查询字符串（会删除重复）
+        11、sort()             // 排序方法
+传统接口legacy URL API 由url.parse() 来返回urlObject 对象 不会自动格式化url中文字
+    1、属性
+        1、 urlObject.auth         // 获取或设置用户名密码（未设置则返回undefined）
+        2、 urlObject.hash         // 获取或设置锚点没有返回null
+        3、 urlObject.host         // 获取或设置主机名包括端口号
+        4、 urlObject.hostname     // 获取或设置主机名不包括端口号
+        5、 urlObject.href         // 获取或设置地址同toString()
+        6、 urlObject.path         // 获取或设置路径包括查询字符串
+        7、 urlObject.pathname     // 获取或设置路径包不括查询字符串
+        8、 urlObject.port         // 获取或设置端口号
+        9、 urlObject.protocol     // 获取或设置协议名
+        10、urlObject.query        // 获取或设置查询字符串不包含问好
+        11、urlObject.search       // 获取或设置查询字符串包含问好
+        12、urlObject.slaches      // 判断protocol后是否为'//'
+
+    2、 api
+        1、url.format(URLObject)         // url对象格式化成字符串
+        2、url.parse(urlString)         // url字符串转化成对象
+        3、url.resolve(form,to)         // 方法会以一种 Web 浏览器解析超链接的方式把一个目标 URL 解析成相对于一个基础 URL
+
+
+实际用法两种将url字符串转换为url对象的方法
+    1、 WHATWG URL 对象方式，优点可全局引用
+        const { URL } = require('url');
+        const myUrl = new URL('https://www.baidu.com');
+    2、传统方式
+        const url = require('url');
+        const myUrl = url.parse('http://www.baidu.com');

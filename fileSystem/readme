@@ -1,0 +1,29 @@
+fs模块所有api都有异步合同部两种方式，异步方式后跟回调函数，同步加Sync；
+
+1、WHATWG URL object support
+    对于大多数 fs 模块的函数， path 或者 filename 参数可以当作一个 WHATWG URL 对象传入。 只有 URL 对象使用被支持的 file: 协议。
+     URL 包含已经编码的斜线符号会在所有平台抛出错误。 例如file:///C:/p/a/t/h/%2F
+2、fs.FSWatcher 类
+    api
+        1、 fs.watch(filename[, options][, listener ])      //  返回对象类型FSWatcher类提供给 fs.watch() 的 listener 回调会接收返回的 FSWatcher 的 change 事件。
+            filename  类型<string>/<buffer>/<url> // filename 可以是一个文件或一个目录
+            options  类型<string>/<object>
+                1、persistent <boolean> // 指明如果文件正在被监视，进程是否应该继续运行默认true
+                2、recursive <boolean>  //  指明是否全部子目录应该被监视，或只是当前目录默认false只监视当前目录
+                3、encoding <string>    // 指定用于传给监听器的文件名的字符编码。默认 = 'utf8'
+            listener <Function> | <undefined> Default: undefined
+            事件
+            1、change事件   //  当一个被监视的目录或文件有变化时触发
+                eventType   // fs变化的类型String
+                filename    // string|buffer 变化的文件名
+            2、 error 事件  // 当发生错误时触发
+            watcher.close()  // 用于停止监视给定的fs.FSWatcher 的变化
+3、fs.Stats类
+    api
+        1、 fs.watchFile(filename[, options], listener)  //  监视 filename 的变化返回StateWatcher
+            filename <string> | <Buffer> | <URL>
+            options <Object>
+                persistent <boolean> Default: true 表明当文件正在被监视时，进程是否应该继续运行
+                interval <integer> Default: 5007 表示目标应该每隔多少毫秒被轮询
+            listener <Function> 有两个参数，当前的状态对象和以前的状态对象 fs.stat实例
+注意：fs.watch() 比 fs.watchFile 和 fs.unwatchFile 更高效。 可能的话，应该使用 fs.watch 而不是 fs.watchFile 和 fs.unwatchFile。

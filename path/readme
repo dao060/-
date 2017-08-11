@@ -1,0 +1,42 @@
+path 模块提供了一些工具函数，用于处理文件与目录的路径。可以通过以下方式使用
+
+Windows 与 POSIX
+    想要在任何系统上处理window文件路径用path.win32
+    想要在任何系统上处理posix(可移植性操作系统)文件路径用path.posix
+
+__filename // 全局属性用于获取当前文件的路径
+__pathname // 全局属性用于获取当前文件的路径相当于
+path.basename(path[, ext])      // 方法返回一个 path 的最后一部分 ext为可选扩展名
+path.delimiter                  // 返回提供平台特定的路径分隔符 win ';' posix ':'
+path.dirname(path)              // 返回路径不包含文件
+path.extname(path)              // 返回后缀 .html/.js/.css/...
+path.format(pathObject)         // 方法会从一个对象返回一个路径字符串与path.parse()相反
+    pathObject对象字段
+        dir:              // 路径字符串 最后不需要加斜杠
+        root:             // 路径字符串 最后要加斜杠有dir时不生效
+        base:             // 文件名加后缀
+        name/ext:         // 文件名/后缀名 当有base时不生效
+
+path.isAbsolute(path)   // 方法会判定 path 是否为一个绝对路径。
+    win上
+    path.isAbsolute('//server');    // true
+    path.isAbsolute('\\\\server');  // true
+    path.isAbsolute('C:/foo/..');   // true
+    path.isAbsolute('C:\\foo\\..'); // true
+    path.isAbsolute('bar\\baz');    // false
+    path.isAbsolute('bar/baz');     // false
+    path.isAbsolute('.');           // false
+path.join([...paths])      // 将路径片段拼合成一个完整路径
+path.normalize(path)       // 方法会规范化给定的 path，并解析 '..' 和 '.' 片段
+path.parse(path)          // 方法返回一个对象，对象的属性表示 path 的元素
+    字段
+        dir  路径
+        root    跟
+        base   文件
+        name    文件名
+        ext     后缀
+path.posix      //  属性提供了 path 方法针对 POSIX 的实现针对可移植系统
+path.relative(from, to)  // 方法返回从 from 到 to 的相对路径（基于当前工作目录）
+path.resolve([...paths]) // 传入值会返回当前绝对路径   方法会把一个路径或路径片段的序列解析为一个绝对路径。
+path.sep    // 提供平台特定路径片段分隔符 win 为‘\’ posix上为‘/’
+path.win32  // 针对window系统的平台
